@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0C0A09">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>AV Visuals — Revenue OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --ink:#0C0A09;
+  --slab:#16130F;
+  --slab2:#1F1A15;
+  --slab3:#2A231C;
+  --rule:#2E2620;
+  --rule2:#3E342B;
+  --ember:#FF6A1F;
+  --ember2:#FFA24B;
+  --ember-dim:rgba(255,106,31,.13);
+  --hit:#4ADE80;
+  --hit-dim:rgba(74,222,128,.13);
+  --part:#FACC15;
+  --part-dim:rgba(250,204,21,.13);
+  --miss:#F43F5E;
+  --miss-dim:rgba(244,63,94,.13);
+  --sky:#38BDF8;
+  --violet:#C084FC;
+  --bone:#F4EDE5;
+  --ash:#8B8177;
+  --dim:#574E46;
+  --display:'Bebas Neue',Impact,sans-serif;
+  --body:'Outfit',system-ui,sans-serif;
+  --mono:'DM Mono','SF Mono',monospace;
+  --r:12px;
+}
+
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--ink);
+  color:var(--bone);
+  font-family:var(--body);
+  font-size:14px;
+  line-height:1.5;
+  min-height:100dvh;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior-y:none;
+}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--ember);outline-offset:2px;border-radius:4px}
+::selection{background:var(--ember);color:#0C0A09}
+.eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ash);text-transform:uppercase}
+.num{font-family:var(--display);letter-spacing:1px;line-height:.9;font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.hide{display:none!important}
+
+/* ══ SHELL ══ */
+.shell{display:grid;grid-template-columns:212px 1fr;min-height:100dvh}
+
+.rail{
+  background:var(--slab);
+  border-right:1px solid var(--rule);
+  padding:20px 14px;
+  display:flex;flex-direction:column;gap:22px;
+  position:sticky;top:0;height:100dvh;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:0 6px}
+.brand-mark{
+  width:30px;height:30px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(145deg,var(--ember),#E8480A);
+  display:grid;place-items:center;
+  font-family:var(--display);font-size:17px;color:#150C05;
+  box-shadow:0 3px 14px rgba(255,106,31,.3);
+}
+.brand-name{font-family:var(--display);font-size:19px;letter-spacing:1.5px;line-height:1}
+.brand-sub{font-family:var(--mono);font-size:7.5px;letter-spacing:2px;color:var(--dim);margin-top:2px}
+
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav-item{
+  display:flex;align-items:center;gap:11px;
+  padding:9px 11px;border-radius:9px;
+  font-size:13px;font-weight:500;color:var(--ash);
+  transition:background .13s,color .13s;
+  width:100%;text-align:left;
+}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:.8}
+.nav-item:hover{background:var(--slab2);color:var(--bone)}
+.nav-item.on{background:var(--ember-dim);color:var(--ember2)}
+.nav-item.on svg{opacity:1}
+
+.rail-foot{margin-top:auto;display:flex;flex-direction:column;gap:9px}
+.sync{
+  display:flex;align-items:center;gap:7px;
+  padding:8px 10px;border-radius:9px;
+  background:var(--slab2);border:1px solid var(--rule);
+  font-family:var(--mono);font-size:9px;letter-spacing:.5px;color:var(--ash);
+}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--hit);flex-shrink:0}
+.sync.warn .sync-dot{background:var(--part)}
+.sync.bad  .sync-dot{background:var(--miss)}
+.sync.busy .sync-dot{background:var(--ember);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+.main{padding:22px 26px 40px;max-width:1180px;width:100%}
+
+/* ══ HEADER ══ */
+.head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.head-h{font-family:var(--display);font-size:32px;letter-spacing:2px;line-height:1}
+.head-sub{font-family:var(--mono);font-size:10px;color:var(--ash);letter-spacing:1px;margin-top:5px}
+
+.datenav{display:flex;align-items:center;gap:6px}
+.dbtn{
+  width:32px;height:32px;border-radius:9px;
+  border:1px solid var(--rule);background:var(--slab);
+  display:grid;place-items:center;color:var(--ash);
+  transition:.13s;
+}
+.dbtn:hover{border-color:var(--rule2);color:var(--bone);background:var(--slab2)}
+.dbtn svg{width:14px;height:14px}
+.dpill{
+  padding:7px 13px;border-radius:9px;
+  border:1px solid var(--rule);background:var(--slab);
+  font-family:var(--mono);font-size:11px;letter-spacing:.5px;
+  display:flex;align-items:center;gap:8px;
+}
+.dpill input{background:none;border:none;color:var(--bone);font-family:var(--mono);font-size:11px;width:112px;cursor:pointer}
+.dpill input::-webkit-calendar-picker-indicator{filter:invert(.55);cursor:pointer}
+.today-btn{
+  padding:7px 13px;border-radius:9px;background:var(--ember-dim);
+  border:1px solid rgba(255,106,31,.32);color:var(--ember2);
+  font-family:var(--mono);font-size:10px;letter-spacing:1px;
+}
+.today-btn:hover{background:rgba(255,106,31,.2)}
+
+/* ══ HERO — THE GAP ══ */
+.gap-card{
+  background:
+    radial-gradient(120% 150% at 100% 0%, rgba(255,106,31,.16), transparent 58%),
+    var(--slab);
+  border:1px solid var(--rule);
+  border-radius:16px;
+  padding:22px 24px;
+  position:relative;overflow:hidden;
+  margin-bottom:12px;
+}
+.gap-card.done{
+  background:radial-gradient(120% 150% at 100% 0%, rgba(74,222,128,.16), transparent 58%),var(--slab);
+  border-color:rgba(74,222,128,.3);
+}
+.gap-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.gap-figure{font-family:var(--display);font-size:74px;letter-spacing:1px;line-height:.82;color:var(--ember);font-variant-numeric:tabular-nums}
+.gap-card.done .gap-figure{color:var(--hit)}
+.gap-cap{font-size:12px;color:var(--ash);margin-top:9px;max-width:340px;line-height:1.5}
+.gap-cap b{color:var(--bone);font-weight:600}
+
+.target-set{text-align:right;flex-shrink:0}
+.target-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 14px;border-radius:11px;
+  background:var(--slab2);border:1px solid var(--rule2);
+  transition:.13s;
+}
+.target-btn:hover{border-color:var(--ember);background:var(--slab3)}
+.target-btn .num{font-size:25px;color:var(--bone)}
+.target-btn svg{width:13px;height:13px;color:var(--dim)}
+
+.bar{height:7px;border-radius:5px;background:var(--slab3);overflow:hidden;margin-top:20px}
+.bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--ember),var(--ember2));transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.gap-card.done .bar-fill{background:linear-gradient(90deg,#22C55E,var(--hit))}
+.bar-legend{display:flex;justify-content:space-between;margin-top:8px;font-family:var(--mono);font-size:9.5px;color:var(--ash);letter-spacing:.5px}
+
+.math{
+  margin-top:16px;padding-top:15px;border-top:1px solid var(--rule);
+  display:flex;gap:26px;flex-wrap:wrap;
+}
+.math-b .eyebrow{margin-bottom:4px}
+.math-v{font-size:14px;font-weight:600}
+.math-v small{font-weight:400;color:var(--ash);font-size:11.5px}
+
+/* ══ STAT ROW ══ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+.stat{background:var(--slab);border:1px solid var(--rule);border-radius:13px;padding:14px 16px}
+.stat .eyebrow{margin-bottom:7px}
+.stat-v{font-family:var(--display);font-size:27px;letter-spacing:1px;line-height:.9;font-variant-numeric:tabular-nums}
+.stat-note{font-family:var(--mono);font-size:9.5px;color:var(--ash);margin-top:6px;letter-spacing:.3px}
+
+/* ══ PANELS ══ */
+.grid2{display:grid;grid-template-columns:1.45fr 1fr;gap:14px;align-items:start}
+.panel{background:var(--slab);border:1px solid var(--rule);border-radius:14px;overflow:hidden}
+.panel-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 17px;border-bottom:1px solid var(--rule);
+}
+.panel-title{font-family:var(--display);font-size:17px;letter-spacing:1.5px}
+.panel-body{padding:6px 17px 15px}
+.panel-body.tight{padding:14px 17px}
+
+/* ══ MISSION ══ */
+.eng{border-bottom:1px solid var(--rule)}
+.eng:last-child{border-bottom:none}
+.eng-head{display:flex;align-items:center;gap:10px;padding:14px 0 9px}
+.eng-tick{width:3px;height:15px;border-radius:2px;flex-shrink:0}
+.eng-name{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--bone)}
+.eng-win{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.5px}
+.eng-count{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--ash)}
+.eng-mini{width:44px;height:4px;border-radius:3px;background:var(--slab3);overflow:hidden;flex-shrink:0}
+.eng-mini i{display:block;height:100%;border-radius:3px;transition:width .35s}
+
+.task{
+  display:flex;align-items:center;gap:11px;
+  padding:8px 9px;border-radius:9px;margin-bottom:3px;
+  transition:background .12s;
+}
+.task:hover{background:var(--slab2)}
+.tick{
+  width:19px;height:19px;flex-shrink:0;border-radius:6px;
+  border:1.5px solid var(--rule2);
+  display:grid;place-items:center;transition:.13s;
+}
+.tick:hover{border-color:var(--ash)}
+.tick.on{background:var(--hit);border-color:var(--hit)}
+.tick.on::after{content:'';width:5px;height:9px;border:solid #0C0A09;border-width:0 2px 2px 0;transform:rotate(43deg) translate(-1px,-1px)}
+.task-label{flex:1;font-size:13px;line-height:1.4;cursor:pointer;min-width:0}
+.task.done .task-label{color:var(--dim);text-decoration:line-through}
+
+.step{display:flex;align-items:center;gap:0;flex-shrink:0;background:var(--slab2);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.step button{width:26px;height:26px;color:var(--ash);font-size:15px;line-height:1;transition:.12s}
+.step button:hover{background:var(--slab3);color:var(--bone)}
+.step-mid{
+  min-width:60px;text-align:center;font-family:var(--mono);font-size:10.5px;
+  padding:0 3px;color:var(--bone);cursor:pointer;
+  font-variant-numeric:tabular-nums;
+}
+.step-mid.full{color:var(--hit)}
+.step-mid span{color:var(--dim)}
+
+.empty{text-align:center;padding:34px 18px;color:var(--dim);font-size:12.5px}
+.empty b{display:block;font-family:var(--display);font-size:17px;letter-spacing:1.5px;color:var(--ash);margin-bottom:5px}
+
+/* ══ REVENUE LOG ══ */
+.rev-item{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 0;border-bottom:1px solid var(--rule);
+}
+.rev-item:last-child{border-bottom:none}
+.rev-amt{font-family:var(--display);font-size:21px;letter-spacing:.5px;color:var(--hit);min-width:66px;font-variant-numeric:tabular-nums}
+.rev-amt.booked{color:var(--part)}
+.rev-who{flex:1;min-width:0}
+.rev-who b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rev-who span{font-family:var(--mono);font-size:9.5px;color:var(--ash)}
+.x{width:24px;height:24px;border-radius:7px;color:var(--dim);display:grid;place-items:center;flex-shrink:0;transition:.12s}
+.x:hover{background:var(--miss-dim);color:var(--miss)}
+.x svg{width:13px;height:13px}
+
+.add-rev{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:11px;margin-top:12px;border-radius:11px;
+  background:var(--ember-dim);border:1px dashed rgba(255,106,31,.4);
+  color:var(--ember2);font-family:var(--mono);font-size:10.5px;letter-spacing:1.3px;
+  transition:.13s;
+}
+.add-rev:hover{background:rgba(255,106,31,.2);border-style:solid}
+
+.note-box{
+  width:100%;background:var(--slab2);border:1px solid var(--rule);
+  border-radius:10px;padding:11px 13px;font-size:12.5px;color:var(--bone);
+  resize:vertical;min-height:66px;line-height:1.55;
+}
+.note-box::placeholder{color:var(--dim)}
+.note-box:focus{outline:none;border-color:var(--rule2)}
+
+/* ══ ENGINE EDITOR ══ */
+.ed-eng{background:var(--slab);border:1px solid var(--rule);border-radius:14px;margin-bottom:12px;overflow:hidden}
+.ed-eng-head{display:flex;align-items:center;gap:11px;padding:14px 16px;background:var(--slab2);border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.ed-eng-head input.ename{
+  background:none;border:none;font-family:var(--display);font-size:19px;letter-spacing:1.3px;
+  color:var(--bone);flex:1;min-width:110px;border-bottom:1px solid transparent;padding:2px 0;
+}
+.ed-eng-head input.ename:focus{outline:none;border-bottom-color:var(--rule2)}
+.ed-eng-head input.ewin{
+  background:var(--slab3);border:1px solid var(--rule);border-radius:7px;
+  padding:5px 9px;font-family:var(--mono);font-size:9.5px;color:var(--ash);width:135px;
+}
+.ed-eng-head input.ewin:focus{outline:none;border-color:var(--rule2)}
+.swatch{width:20px;height:20px;border-radius:6px;border:1px solid var(--rule2);padding:0;cursor:pointer;background:none;flex-shrink:0}
+
+.ed-task{
+  display:grid;grid-template-columns:1fr 96px 190px auto;
+  gap:10px;align-items:center;
+  padding:11px 16px;border-bottom:1px solid var(--rule);
+}
+.ed-task:last-of-type{border-bottom:none}
+.ed-task.off{opacity:.4}
+.fld{
+  background:var(--slab2);border:1px solid var(--rule);border-radius:8px;
+  padding:8px 10px;font-size:12.5px;color:var(--bone);width:100%;
+}
+.fld:focus{outline:none;border-color:var(--ember);background:var(--slab3)}
+.fld::placeholder{color:var(--dim)}
+.fld.qty{font-family:var(--mono);font-size:11px;text-align:center;padding:8px 4px}
+.qty-wrap{display:flex;gap:4px}
+.qty-wrap .fld.unit{font-family:var(--mono);font-size:10px;padding:8px 4px;text-align:center}
+
+.daybar{display:flex;gap:3px}
+.daybit{
+  width:24px;height:26px;border-radius:6px;
+  background:var(--slab2);border:1px solid var(--rule);
+  font-family:var(--mono);font-size:9px;color:var(--dim);
+  transition:.12s;
+}
+.daybit:hover{border-color:var(--rule2)}
+.daybit.on{background:var(--ember-dim);border-color:rgba(255,106,31,.45);color:var(--ember2)}
+
+.rowacts{display:flex;gap:3px}
+.iact{width:27px;height:27px;border-radius:7px;color:var(--dim);display:grid;place-items:center;transition:.12s}
+.iact:hover{background:var(--slab3);color:var(--bone)}
+.iact.del:hover{background:var(--miss-dim);color:var(--miss)}
+.iact svg{width:14px;height:14px}
+
+.addrow{
+  display:flex;align-items:center;justify-content:center;gap:7px;width:100%;
+  padding:11px;color:var(--ash);font-family:var(--mono);font-size:10px;letter-spacing:1.2px;
+  border-top:1px solid var(--rule);transition:.12s;
+}
+.addrow:hover{background:var(--slab2);color:var(--ember2)}
+
+/* ══ CALENDAR ══ */
+.cal-nav{display:flex;align-items:center;gap:10px}
+.cal-month{font-family:var(--display);font-size:21px;letter-spacing:1.8px;min-width:158px;text-align:center}
+.dow{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+.dow div{text-align:center;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;padding-bottom:3px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cell{
+  aspect-ratio:1/.92;border-radius:10px;
+  background:var(--slab2);border:1px solid var(--rule);
+  padding:7px 8px;display:flex;flex-direction:column;
+  transition:.13s;position:relative;overflow:hidden;text-align:left;
+}
+.cell:hover{border-color:var(--rule2);transform:translateY(-1px)}
+.cell.blank{background:none;border-color:transparent;pointer-events:none}
+.cell.today{border-color:var(--ember);box-shadow:0 0 0 1px rgba(255,106,31,.28)}
+.cell.sel{border-color:var(--bone)}
+.cell-d{font-family:var(--mono);font-size:10.5px;color:var(--ash)}
+.cell.today .cell-d{color:var(--ember2)}
+.cell-amt{margin-top:auto;font-family:var(--display);font-size:15px;letter-spacing:.5px;font-variant-numeric:tabular-nums}
+.cell-tgt{font-family:var(--mono);font-size:8px;color:var(--dim);margin-top:1px}
+.cell.hit {background:var(--hit-dim); border-color:rgba(74,222,128,.3)}
+.cell.hit  .cell-amt{color:var(--hit)}
+.cell.part{background:var(--part-dim);border-color:rgba(250,204,21,.28)}
+.cell.part .cell-amt{color:var(--part)}
+.cell.low {background:var(--ember-dim);border-color:rgba(255,106,31,.28)}
+.cell.low  .cell-amt{color:var(--ember2)}
+.cell.zero{background:var(--miss-dim);border-color:rgba(244,63,94,.25)}
+.cell.zero .cell-amt{color:var(--miss);font-size:12px}
+.cell-tasks{position:absolute;top:7px;right:8px;font-family:var(--mono);font-size:8px;color:var(--dim)}
+
+.legend{display:flex;gap:15px;flex-wrap:wrap;margin-top:15px;padding-top:14px;border-top:1px solid var(--rule)}
+.lg{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;color:var(--ash);letter-spacing:.5px}
+.lg i{width:9px;height:9px;border-radius:3px;display:block}
+
+/* ══ ANALYTICS ══ */
+.chart{display:flex;align-items:flex-end;gap:5px;height:168px;padding-top:12px}
+.col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;height:100%;min-width:0}
+.col-stack{width:100%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;position:relative}
+.col-bar{width:100%;border-radius:4px 4px 2px 2px;background:linear-gradient(180deg,var(--ember2),var(--ember));min-height:2px;transition:height .45s cubic-bezier(.2,.8,.2,1)}
+.col-bar.hit{background:linear-gradient(180deg,var(--hit),#22C55E)}
+.col-goal{position:absolute;left:0;right:0;border-top:1px dashed var(--rule2);pointer-events:none}
+.col-x{font-family:var(--mono);font-size:8px;color:var(--dim);white-space:nowrap}
+
+.insight{
+  background:var(--slab2);border:1px solid var(--rule);border-left:2px solid var(--ember);
+  border-radius:10px;padding:13px 15px;margin-bottom:9px;
+}
+.insight .eyebrow{margin-bottom:5px}
+.insight p{font-size:12.5px;line-height:1.55;color:var(--ash)}
+.insight p b{color:var(--bone);font-weight:600}
+.insight.good{border-left-color:var(--hit)}
+.insight.warn{border-left-color:var(--part)}
+
+.mini-list{display:flex;flex-direction:column}
+.mini-row{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--rule)}
+.mini-row:last-child{border-bottom:none}
+.mini-row .k{font-size:12.5px;flex:1}
+.mini-row .v{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums}
+.mini-track{width:70px;height:4px;border-radius:3px;background:var(--slab3);overflow:hidden;flex-shrink:0}
+.mini-track i{display:block;height:100%;background:var(--ember);border-radius:3px}
+
+/* ══ MODAL ══ */
+.scrim{
+  position:fixed;inset:0;background:rgba(6,5,4,.82);backdrop-filter:blur(4px);
+  z-index:90;display:grid;place-items:center;padding:18px;
+  animation:fade .16s ease;
+}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal{
+  background:var(--slab);border:1px solid var(--rule2);border-radius:17px;
+  width:100%;max-width:400px;padding:22px;
+  animation:rise .2s cubic-bezier(.2,.8,.2,1);
+  max-height:90dvh;overflow-y:auto;
+}
+@keyframes rise{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+.modal h3{font-family:var(--display);font-size:23px;letter-spacing:1.7px;margin-bottom:4px}
+.modal .sub{font-family:var(--mono);font-size:9.5px;color:var(--ash);letter-spacing:.8px;margin-bottom:18px}
+.field{margin-bottom:13px}
+.field label{display:block;margin-bottom:6px}
+.big-in{
+  width:100%;background:var(--slab2);border:1px solid var(--rule2);border-radius:11px;
+  padding:13px 15px;font-family:var(--display);font-size:31px;letter-spacing:1px;
+  color:var(--bone);text-align:center;font-variant-numeric:tabular-nums;
+}
+.big-in:focus{outline:none;border-color:var(--ember)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.chip{
+  padding:7px 12px;border-radius:8px;background:var(--slab2);border:1px solid var(--rule);
+  font-family:var(--mono);font-size:10.5px;color:var(--ash);transition:.12s;
+}
+.chip:hover{border-color:var(--ember);color:var(--ember2)}
+.chip.on{background:var(--ember-dim);border-color:rgba(255,106,31,.45);color:var(--ember2)}
+.modal-acts{display:flex;gap:9px;margin-top:19px}
+.btn{
+  flex:1;padding:12px;border-radius:11px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:1.3px;transition:.13s;
+}
+.btn.ghost{background:var(--slab2);border:1px solid var(--rule2);color:var(--ash)}
+.btn.ghost:hover{background:var(--slab3);color:var(--bone)}
+.btn.go{background:linear-gradient(135deg,var(--ember),#E8480A);color:#150C05;font-weight:500}
+.btn.go:hover{filter:brightness(1.1)}
+
+/* ══ TOAST ══ */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+  background:var(--slab3);border:1px solid var(--rule2);border-radius:11px;
+  padding:11px 18px;font-family:var(--mono);font-size:10.5px;letter-spacing:.7px;
+  z-index:120;animation:pop .22s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 10px 32px rgba(0,0,0,.55);max-width:calc(100vw - 32px);
+}
+@keyframes pop{from{transform:translate(-50%,14px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+.toast.win{border-color:rgba(74,222,128,.45);color:var(--hit)}
+
+/* ══ MOBILE ══ */
+.tabbar{display:none}
+@media(max-width:900px){
+  .grid2{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .ed-task{grid-template-columns:1fr auto;grid-template-areas:'label acts' 'qty days';row-gap:9px}
+  .ed-task .lbl-cell{grid-area:label}
+  .ed-task .qty-wrap{grid-area:qty}
+  .ed-task .daybar{grid-area:days;justify-content:flex-end}
+  .ed-task .rowacts{grid-area:acts}
+}
+@media(max-width:760px){
+  .shell{grid-template-columns:1fr}
+  .rail{
+    position:static;height:auto;flex-direction:row;align-items:center;
+    padding:13px 16px;border-right:none;border-bottom:1px solid var(--rule);gap:12px;
+  }
+  .rail .nav{display:none}
+  .rail-foot{margin:0 0 0 auto;flex-direction:row}
+  .main{padding:16px 14px 96px}
+  .head-h{font-size:26px}
+  .gap-figure{font-size:58px}
+  .gap-card{padding:18px}
+  .math{gap:18px}
+  .stats{gap:8px}
+  .stat{padding:12px 13px}
+  .stat-v{font-size:23px}
+  .cal-grid,.dow{gap:4px}
+  .cell{padding:5px 6px;border-radius:8px}
+  .cell-amt{font-size:11.5px}
+  .cell-tgt,.cell-tasks{display:none}
+  .cal-month{font-size:18px;min-width:130px}
+  .panel-body{padding:4px 13px 13px}
+  .panel-body.tight{padding:13px}
+  .task{padding:9px 6px}
+  .step-mid{min-width:52px}
+  .chart{height:132px;gap:3px}
+
+  .tabbar{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    position:fixed;left:0;right:0;bottom:0;z-index:70;
+    background:rgba(22,19,15,.96);backdrop-filter:blur(14px);
+    border-top:1px solid var(--rule);
+    padding:7px 5px calc(7px + env(safe-area-inset-bottom));
+  }
+  .tab{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:6px 3px;border-radius:9px;color:var(--dim);
+    font-family:var(--mono);font-size:8.5px;letter-spacing:.6px;
+  }
+  .tab svg{width:18px;height:18px}
+  .tab.on{color:var(--ember2)}
+  .toast{bottom:82px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ══ RAIL ══ -->
+  <aside class="rail">
+    <div class="brand">
+      <div class="brand-mark">AV</div>
+      <div>
+        <div class="brand-name">REVENUE OS</div>
+        <div class="brand-sub">ATLANTA · AV VISUALS</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item on" data-view="war">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+        War Room
+      </button>
+      <button class="nav-item" data-view="engine">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="18" cy="6" r="2"/><circle cx="14" cy="18" r="2"/></svg>
+        Sales Engine
+      </button>
+      <button class="nav-item" data-view="cal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        Calendar
+      </button>
+      <button class="nav-item" data-view="an">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        Analytics
+      </button>
+    </nav>
+
+    <div class="rail-foot">
+      <div class="sync" id="sync"><span class="sync-dot"></span><span id="syncTxt">Connecting</span></div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main" id="main"></main>
+</div>
+
+<!-- ══ MOBILE TABS ══ -->
+<nav class="tabbar">
+  <button class="tab on" data-view="war">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>WAR ROOM</button>
+  <button class="tab" data-view="engine">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="18" cy="6" r="2"/><circle cx="14" cy="18" r="2"/></svg>ENGINE</button>
+  <button class="tab" data-view="cal">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>CALENDAR</button>
+  <button class="tab" data-view="an">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>ANALYTICS</button>
+</nav>
+
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
+<script>
+/* ═══════════════════════════════════════════════════
+   AV VISUALS — REVENUE OS
+   ═══════════════════════════════════════════════════ */
+
+const SUPA_URL = 'https://xpuftglvklaqskztvlae.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhwdWZ0Z2x2a2xhcXNrenR2bGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwNDg1NTgsImV4cCI6MjEwMTYyNDU1OH0.1MYQLO1dZsfQIc1AgVd917vOD6MLUPLwUGYeqm8PJ-I';
+
+const HEADERS = {
+  apikey: SUPA_KEY,
+  Authorization: 'Bearer ' + SUPA_KEY,
+  'Content-Type': 'application/json'
+};
+
+/* ── dates (local time, never UTC) ── */
+const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const parseISO = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = parseISO(s); d.setDate(d.getDate() + n); return iso(d); };
+const TODAY = () => iso(new Date());
+const DOW_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const DOW_S = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const money = n => '$' + Math.round(n).toLocaleString('en-US');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* ── state ── */
+const S = {
+  view: 'war',
+  date: TODAY(),
+  calMonth: (() => { const d = new Date(); d.setDate(1); return iso(d); })(),
+  engines: [], tasks: [],
+  cfg: { monthly_target: 12000, default_daily: 400, avg_deal: 650, close_rate: 12 },
+  days: {}, logs: {}, rev: {},
+  loadedMonths: new Set(),
+  queue: [], live: false, booting: true
+};
+
+/* ═══ PERSISTENCE ═══ */
+const CACHE = 'ros_cache_v1', QKEY = 'ros_queue_v1';
+
+function saveCache() {
+  try {
+    localStorage.setItem(CACHE, JSON.stringify({
+      engines: S.engines, tasks: S.tasks, cfg: S.cfg,
+      days: S.days, logs: S.logs, rev: S.rev
+    }));
+  } catch (e) { /* quota — non-fatal */ }
+}
+function loadCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem(CACHE) || 'null');
+    if (!c) return false;
+    Object.assign(S, {
+      engines: c.engines || [], tasks: c.tasks || [],
+      cfg: { ...S.cfg, ...(c.cfg || {}) },
+      days: c.days || {}, logs: c.logs || {}, rev: c.rev || {}
+    });
+    return S.tasks.length > 0;
+  } catch (e) { return false; }
+}
+function saveQueue() { try { localStorage.setItem(QKEY, JSON.stringify(S.queue)); } catch (e) {} }
+function loadQueue() { try { S.queue = JSON.parse(localStorage.getItem(QKEY) || '[]'); } catch (e) { S.queue = []; } }
+
+/* ═══ NETWORK ═══ */
+async function api(path, opts = {}) {
+  const r = await fetch(SUPA_URL + '/rest/v1/' + path, {
+    ...opts,
+    headers: { ...HEADERS, ...(opts.headers || {}) }
+  });
+  if (!r.ok) throw new Error(r.status + ' ' + (await r.text()).slice(0, 200));
+  const t = await r.text();
+  return t ? JSON.parse(t) : [];
+}
+
+/* fire-and-forget write; on failure it goes in the queue */
+function write(path, opts, tag) {
+  const job = { path, opts, tag, at: Date.now() };
+  setSync('busy', 'Saving');
+  api(path, opts)
+    .then(() => { S.live = true; flush(); })
+    .catch(() => { S.queue.push(job); saveQueue(); setSync('warn', S.queue.length + ' pending'); });
+}
+
+async function flush() {
+  if (!S.queue.length) { setSync('ok', S.live ? 'Synced' : 'Local only'); return; }
+  setSync('busy', 'Syncing ' + S.queue.length);
+  const pending = [...S.queue];
+  S.queue = [];
+  for (const job of pending) {
+    try { await api(job.path, job.opts); }
+    catch (e) { S.queue.push(job); }
+  }
+  saveQueue();
+  setSync(S.queue.length ? 'warn' : 'ok', S.queue.length ? S.queue.length + ' pending' : 'Synced');
+}
+
+function setSync(kind, txt) {
+  const el = document.getElementById('sync');
+  if (!el) return;
+  el.className = 'sync' + (kind === 'ok' ? '' : ' ' + kind);
+  document.getElementById('syncTxt').textContent = txt;
+}
+
+/* shorthands */
+const _pend = {};
+function upsertDeb(key, table, rows, onConflict, ms = 450) {
+  clearTimeout(_pend[key]);
+  _pend[key] = setTimeout(() => { delete _pend[key]; upsert(table, rows, onConflict); }, ms);
+}
+const upsert = (table, rows, onConflict) => write(
+  table + (onConflict ? '?on_conflict=' + onConflict : ''),
+  { method: 'POST', body: JSON.stringify(rows), headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } },
+  table
+);
+const patch = (table, filter, body) => write(table + '?' + filter, { method: 'PATCH', body: JSON.stringify(body), headers: { Prefer: 'return=minimal' } }, table);
+const remove = (table, filter) => write(table + '?' + filter, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }, table);
+
+/* ═══ LOAD ═══ */
+async function boot() {
+  loadQueue();
+  const hadCache = loadCache();
+  if (hadCache) { S.booting = false; render(); }
+
+  try {
+    const since = addDays(TODAY(), -180);
+    const [engines, tasks, days, revenue, logs, settings] = await Promise.all([
+      api('ros_engine?select=*&order=sort.asc'),
+      api('ros_task?select=*&order=sort.asc'),
+      api('ros_day?select=*&limit=3000'),
+      api('ros_revenue?select=*&order=created_at.asc&limit=5000'),
+      api('ros_log?select=*&day=gte.' + since + '&limit=20000'),
+      api('ros_setting?select=*&key=eq.config')
+    ]);
+
+    S.engines = engines;
+    S.tasks = tasks;
+    S.days = {}; days.forEach(d => S.days[d.day] = d);
+    S.rev = {}; revenue.forEach(r => (S.rev[r.day] ||= []).push(r));
+    S.logs = {}; logs.forEach(l => ((S.logs[l.day] ||= {})[l.task_id] = l));
+    if (settings[0]?.value) S.cfg = { ...S.cfg, ...settings[0].value };
+
+    S.live = true;
+    S.booting = false;
+    saveCache();
+    await flush();
+    render();
+  } catch (e) {
+    S.booting = false;
+    console.warn('Supabase unreachable:', e.message);
+    setSync('bad', hadCache ? 'Offline · cached' : 'No connection');
+    if (!hadCache) {
+      document.getElementById('main').innerHTML = `
+        <div class="panel"><div class="panel-body tight">
+          <div class="empty">
+            <b>CAN'T REACH SUPABASE</b>
+            Run <span class="mono">supabase-setup.sql</span> in your project's SQL editor,
+            then reload. Your work is saved locally in the meantime.
+          </div>
+        </div></div>`;
+    } else render();
+  }
+}
+
+/* ═══ DERIVED ═══ */
+const dayTarget = d => S.days[d]?.target_amount != null ? +S.days[d].target_amount : +S.cfg.default_daily;
+const targetIsSet = d => S.days[d]?.target_amount != null;
+const dayRev = d => (S.rev[d] || []).filter(r => r.status !== 'booked').reduce((a, r) => a + (+r.amount), 0);
+const dayBooked = d => (S.rev[d] || []).filter(r => r.status === 'booked').reduce((a, r) => a + (+r.amount), 0);
+const hasActivity = d => !!S.days[d] || (S.rev[d] || []).length > 0 || Object.keys(S.logs[d] || {}).length > 0;
+
+function tasksFor(dateStr) {
+  const dow = parseISO(dateStr).getDay();
+  return S.tasks
+    .filter(t => t.active !== false && (t.days || []).includes(dow))
+    .sort((a, b) => (a.sort || 0) - (b.sort || 0));
+}
+const logOf = (d, id) => (S.logs[d] || {})[id] || { qty_done: 0, done: false, target_override: null };
+const tgtOf = (d, t) => { const o = logOf(d, t.id).target_override; return o != null ? o : (t.target_qty || 0); };
+function taskDone(d, t) {
+  const l = logOf(d, t.id), tg = tgtOf(d, t);
+  return tg > 0 ? (l.qty_done || 0) >= tg : !!l.done;
+}
+function dayCompletion(d) {
+  const ts = tasksFor(d);
+  if (!ts.length) return { done: 0, total: 0, pct: 0 };
+  const done = ts.filter(t => taskDone(d, t)).length;
+  return { done, total: ts.length, pct: done / ts.length };
+}
+
+function statusOf(d) {
+  if (!hasActivity(d)) return '';
+  const t = dayTarget(d), r = dayRev(d);
+  if (t <= 0) return r > 0 ? 'hit' : '';
+  if (r >= t) return 'hit';
+  if (r >= t * 0.5) return 'part';
+  if (r > 0) return 'low';
+  return 'zero';
+}
+
+function streak() {
+  let n = 0, d = TODAY();
+  if (statusOf(d) !== 'hit') d = addDays(d, -1);
+  while (statusOf(d) === 'hit') { n++; d = addDays(d, -1); }
+  return n;
+}
+
+function monthStats(ym) {
+  const [y, m] = ym.split('-').map(Number);
+  let rev = 0, booked = 0, tgt = 0, hits = 0, logged = 0, deals = 0;
+  const last = new Date(y, m, 0).getDate();
+  for (let i = 1; i <= last; i++) {
+    const d = `${y}-${String(m).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+    rev += dayRev(d); booked += dayBooked(d);
+    deals += (S.rev[d] || []).filter(r => r.status !== 'booked').length;
+    if (hasActivity(d)) { logged++; tgt += dayTarget(d); if (statusOf(d) === 'hit') hits++; }
+  }
+  return { rev, booked, tgt, hits, logged, deals, last };
+}
+
+/* ═══ MUTATIONS ═══ */
+function setDay(d, fields) {
+  S.days[d] = { day: d, target_amount: dayTarget(d), note: '', ...(S.days[d] || {}), ...fields };
+  saveCache();
+  upsertDeb('day:' + d, 'ros_day', [{ day: d, target_amount: S.days[d].target_amount, note: S.days[d].note || '', updated_at: new Date().toISOString() }], 'day');
+}
+
+function setLog(d, taskId, fields) {
+  const cur = { day: d, task_id: taskId, qty_done: 0, done: false, target_override: null, ...logOf(d, taskId), ...fields };
+  (S.logs[d] ||= {})[taskId] = cur;
+  saveCache();
+  upsertDeb('log:' + d + ':' + taskId, 'ros_log', [{ day: d, task_id: taskId, qty_done: cur.qty_done, done: cur.done, target_override: cur.target_override, updated_at: new Date().toISOString() }], 'day,task_id');
+}
+
+function saveCfg() {
+  saveCache();
+  upsert('ros_setting', [{ key: 'config', value: S.cfg }], 'key');
+}
+
+function saveTask(t) {
+  saveCache();
+  upsert('ros_task', [{ id: t.id, engine_id: t.engine_id, label: t.label, target_qty: t.target_qty, unit: t.unit, days: t.days, sort: t.sort, active: t.active }], 'id');
+}
+
+function saveEngine(e) {
+  saveCache();
+  upsert('ros_engine', [{ id: e.id, name: e.name, window_label: e.window_label, color: e.color, sort: e.sort, active: e.active }], 'id');
+}
+
+const uid = () => (crypto.randomUUID ? crypto.randomUUID()
+  : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16);
+    }));
+
+/* ═══ UI HELPERS ═══ */
+function toast(msg, win) {
+  const r = document.getElementById('toastRoot');
+  r.innerHTML = `<div class="toast${win ? ' win' : ''}">${esc(msg)}</div>`;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => r.innerHTML = '', 2600);
+}
+function closeModal() { document.getElementById('modalRoot').innerHTML = ''; }
+function openModal(html) {
+  const r = document.getElementById('modalRoot');
+  r.innerHTML = `<div class="scrim" data-scrim>${html}</div>`;
+  r.querySelector('[data-scrim]').addEventListener('mousedown', e => { if (e.target.hasAttribute('data-scrim')) closeModal(); });
+  const f = r.querySelector('input,textarea'); if (f) setTimeout(() => { f.focus(); f.select?.(); }, 40);
+}
+const ICON = {
+  left: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  right: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
+  pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>',
+  up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>',
+  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+  eyeoff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10.3 10.3 0 0112 19C6 19 2 12 2 12a18 18 0 015.1-5.9M9.9 4.2A10 10 0 0112 4c6 0 10 8 10 8a18 18 0 01-2.2 3.2M1 1l22 22"/></svg>',
+  gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-2.9 1.2V21a2 2 0 11-4 0v-.1A1.7 1.7 0 007 19.4l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00-1.2-2.9H3a2 2 0 110-4h.1A1.7 1.7 0 004.6 7l-.1-.1a2 2 0 112.8-2.8l.1.1A1.7 1.7 0 0010 4.6V3a2 2 0 114 0v.1A1.7 1.7 0 0017 4.6l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 001.2 2.9H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
+};
+
+/* ═══════════════ VIEW: WAR ROOM ═══════════════ */
+function viewWar() {
+  const d = S.date, isToday = d === TODAY();
+  const tgt = dayTarget(d), got = dayRev(d), bkd = dayBooked(d);
+  const gap = Math.max(0, tgt - got), pct = tgt > 0 ? Math.min(1, got / tgt) : (got > 0 ? 1 : 0);
+  const hit = tgt > 0 && got >= tgt;
+  const dt = parseISO(d);
+  const comp = dayCompletion(d);
+  const ms = monthStats(d.slice(0, 7));
+
+  const deals = S.cfg.avg_deal > 0 ? Math.ceil(gap / S.cfg.avg_deal) : 0;
+  const convos = S.cfg.close_rate > 0 ? Math.ceil(deals / (S.cfg.close_rate / 100)) : 0;
+
+  /* mission grouped by engine */
+  const ts = tasksFor(d);
+  let mission = '';
+  if (!ts.length) {
+    mission = `<div class="empty"><b>NOTHING SCHEDULED</b>No tasks are assigned to ${DOW_FULL[dt.getDay()]}. Open Sales Engine to add some.</div>`;
+  } else {
+    const order = S.engines.slice().sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    mission = order.map(e => {
+      const et = ts.filter(t => t.engine_id === e.id);
+      if (!et.length) return '';
+      const dn = et.filter(t => taskDone(d, t)).length;
+      const p = Math.round(dn / et.length * 100);
+      return `
+      <div class="eng">
+        <div class="eng-head">
+          <span class="eng-tick" style="background:${esc(e.color || '#FF6A1F')}"></span>
+          <span class="eng-name">${esc(e.name)}</span>
+          <span class="eng-win">${esc(e.window_label || '')}</span>
+          <span class="eng-count">${dn}/${et.length}</span>
+          <span class="eng-mini"><i style="width:${p}%;background:${esc(e.color || '#FF6A1F')}"></i></span>
+        </div>
+        ${et.map(t => taskRow(d, t)).join('')}
+      </div>`;
+    }).join('');
+    const orphan = ts.filter(t => !S.engines.some(e => e.id === t.engine_id));
+    if (orphan.length) mission += `<div class="eng"><div class="eng-head"><span class="eng-tick" style="background:var(--ash)"></span><span class="eng-name">Unfiled</span></div>${orphan.map(t => taskRow(d, t)).join('')}</div>`;
+  }
+
+  /* revenue entries */
+  const entries = (S.rev[d] || []);
+  const revList = entries.length
+    ? entries.map(r => `
+      <div class="rev-item">
+        <div class="rev-amt ${r.status === 'booked' ? 'booked' : ''}">${money(+r.amount)}</div>
+        <div class="rev-who">
+          <b>${esc(r.client || 'Unnamed')}</b>
+          <span>${esc(r.service || '—')}${r.status === 'booked' ? ' · booked' : ''}</span>
+        </div>
+        <button class="x" data-act="del-rev" data-id="${r.id}" aria-label="Delete entry">${ICON.x}</button>
+      </div>`).join('')
+    : `<div class="empty"><b>NO MONEY YET</b>Log the first dollar of the day.</div>`;
+
+  return `
+  <div class="head">
+    <div>
+      <div class="head-h">${isToday ? 'TODAY' : DOW_FULL[dt.getDay()].toUpperCase()}</div>
+      <div class="head-sub">${DOW_FULL[dt.getDay()]} · ${MON[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()}</div>
+    </div>
+    <div class="datenav">
+      <button class="dbtn" data-act="nav-day" data-delta="-1" aria-label="Previous day">${ICON.left}</button>
+      <label class="dpill"><input type="date" value="${d}" data-fld="date"></label>
+      <button class="dbtn" data-act="nav-day" data-delta="1" aria-label="Next day">${ICON.right}</button>
+      ${isToday ? '' : '<button class="today-btn" data-act="today">TODAY</button>'}
+    </div>
+  </div>
+
+  <div class="gap-card ${hit ? 'done' : ''}">
+    <div class="gap-top">
+      <div>
+        <div class="eyebrow">${hit ? 'Target cleared' : 'Still need today'}</div>
+        <div class="gap-figure">${hit ? money(got) : money(gap)}</div>
+        <div class="gap-cap">
+          ${hit
+            ? `You set <b>${money(tgt)}</b> and brought in <b>${money(got)}</b>. Anything past this is surplus.`
+            : `You set <b>${money(tgt)}</b>. <b>${money(got)}</b> is in. This number is what today still owes you.`}
+        </div>
+      </div>
+      <div class="target-set">
+        <div class="eyebrow" style="margin-bottom:6px">Today's target</div>
+        <button class="target-btn" data-act="set-target">
+          <span class="num">${money(tgt)}</span>${ICON.pen}
+        </button>
+        ${targetIsSet(d) ? '' : '<div class="eyebrow" style="margin-top:6px;color:var(--dim)">using default</div>'}
+      </div>
+    </div>
+
+    <div class="bar"><div class="bar-fill" style="width:${(pct * 100).toFixed(1)}%"></div></div>
+    <div class="bar-legend"><span>${money(got)} collected</span><span>${Math.round(pct * 100)}%</span><span>${money(tgt)}</span></div>
+
+    ${hit ? '' : `
+    <div class="math">
+      <div class="math-b">
+        <div class="eyebrow">Closes needed</div>
+        <div class="math-v">${deals} <small>at ${money(S.cfg.avg_deal)} avg</small></div>
+      </div>
+      <div class="math-b">
+        <div class="eyebrow">Real conversations</div>
+        <div class="math-v">${convos} <small>at ${S.cfg.close_rate}% close rate</small></div>
+      </div>
+      <div class="math-b">
+        <div class="eyebrow">Mission progress</div>
+        <div class="math-v">${comp.done}/${comp.total} <small>tasks done</small></div>
+      </div>
+    </div>`}
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="eyebrow">Collected today</div>
+      <div class="stat-v" style="color:var(--hit)">${money(got)}</div>
+      <div class="stat-note">${entries.filter(r => r.status !== 'booked').length} entr${entries.filter(r => r.status !== 'booked').length === 1 ? 'y' : 'ies'}</div>
+    </div>
+    <div class="stat">
+      <div class="eyebrow">Booked, not paid</div>
+      <div class="stat-v" style="color:var(--part)">${money(bkd)}</div>
+      <div class="stat-note">shoot scheduled</div>
+    </div>
+    <div class="stat">
+      <div class="eyebrow">${MON[dt.getMonth()].slice(0, 3)} to date</div>
+      <div class="stat-v">${money(ms.rev)}</div>
+      <div class="stat-note">${ms.deals} deal${ms.deals === 1 ? '' : 's'} · ${Math.round(ms.rev / Math.max(1, S.cfg.monthly_target) * 100)}% of ${money(S.cfg.monthly_target)}</div>
+    </div>
+    <div class="stat">
+      <div class="eyebrow">Streak</div>
+      <div class="stat-v" style="color:${streak() > 0 ? 'var(--ember)' : 'var(--dim)'}">${streak()}</div>
+      <div class="stat-note">day${streak() === 1 ? '' : 's'} hitting target</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">TODAY'S MISSION</div>
+        <div class="eyebrow">${comp.done}/${comp.total} · ${Math.round(comp.pct * 100)}%</div>
+      </div>
+      <div class="panel-body">${mission}</div>
+    </div>
+
+    <div>
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-head"><div class="panel-title">MONEY IN</div><div class="eyebrow">${d}</div></div>
+        <div class="panel-body tight">
+          ${revList}
+          <button class="add-rev" data-act="add-rev">${ICON.plus} LOG REVENUE</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">DAY NOTE</div></div>
+        <div class="panel-body tight">
+          <textarea class="note-box" data-fld="note" placeholder="What actually happened? Objections, who went cold, what to try tomorrow.">${esc(S.days[d]?.note || '')}</textarea>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function taskRow(d, t) {
+  const l = logOf(d, t.id), tg = tgtOf(d, t), done = taskDone(d, t);
+  const overridden = l.target_override != null && l.target_override !== t.target_qty;
+  if (tg > 0) {
+    return `
+    <div class="task ${done ? 'done' : ''}">
+      <button class="tick ${done ? 'on' : ''}" data-act="qty-max" data-id="${t.id}" aria-label="Mark complete"></button>
+      <div class="task-label" data-act="qty-edit" data-id="${t.id}">${esc(t.label)}${overridden ? ' <span class="mono" style="font-size:9px;color:var(--ember2)">· today only</span>' : ''}</div>
+      <div class="step">
+        <button data-act="qty" data-id="${t.id}" data-delta="-1" aria-label="Decrease">−</button>
+        <div class="step-mid ${done ? 'full' : ''}" data-act="qty-edit" data-id="${t.id}" title="Tap to type the real number, or change today's target">${l.qty_done || 0}<span>/${tg} ${esc(t.unit || '')}</span></div>
+        <button data-act="qty" data-id="${t.id}" data-delta="1" aria-label="Increase">+</button>
+      </div>
+    </div>`;
+  }
+  return `
+  <div class="task ${done ? 'done' : ''}">
+    <button class="tick ${done ? 'on' : ''}" data-act="toggle" data-id="${t.id}" aria-label="Toggle"></button>
+    <div class="task-label" data-act="toggle" data-id="${t.id}">${esc(t.label)}</div>
+  </div>`;
+}
+
+/* ═══════════════ VIEW: SALES ENGINE ═══════════════ */
+function viewEngine() {
+  const engines = S.engines.slice().sort((a, b) => (a.sort || 0) - (b.sort || 0));
+  const body = engines.map(e => {
+    const ts = S.tasks.filter(t => t.engine_id === e.id).sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    return `
+    <div class="ed-eng">
+      <div class="ed-eng-head">
+        <input type="color" class="swatch" value="${esc(e.color || '#FF6A1F')}" data-fld="eng-color" data-id="${e.id}" aria-label="Engine color">
+        <input class="ename" value="${esc(e.name)}" data-fld="eng-name" data-id="${e.id}" aria-label="Engine name">
+        <input class="ewin" value="${esc(e.window_label || '')}" placeholder="when, e.g. Mornings" data-fld="eng-win" data-id="${e.id}">
+        <div class="rowacts">
+          <button class="iact" data-act="eng-up" data-id="${e.id}" aria-label="Move up">${ICON.up}</button>
+          <button class="iact" data-act="eng-down" data-id="${e.id}" aria-label="Move down">${ICON.down}</button>
+          <button class="iact del" data-act="eng-del" data-id="${e.id}" aria-label="Delete engine">${ICON.x}</button>
+        </div>
+      </div>
+      ${ts.length ? ts.map(t => editRow(t)).join('')
+        : '<div class="empty" style="padding:20px"><b>NO TASKS</b>Add the first move for this engine.</div>'}
+      <button class="addrow" data-act="task-add" data-eng="${e.id}">${ICON.plus} ADD TASK</button>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="head">
+    <div>
+      <div class="head-h">SALES ENGINE</div>
+      <div class="head-sub">The playbook. Edit here, it shows up in tomorrow's mission.</div>
+    </div>
+    <div class="datenav">
+      <button class="today-btn" data-act="settings">${ICON.gear} NUMBERS</button>
+      <button class="today-btn" data-act="eng-add">${ICON.plus} ADD ENGINE</button>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="eyebrow">How this works</div>
+    <p>Set a <b>quantity</b> to make a task a counter (60 SMS). Leave it at <b>0</b> and it's a plain checkbox. The day letters control which days it appears. Change a number here and it applies from now on — to change it for one day only, tap the counter in the War Room and choose <b>today only</b>.</p>
+  </div>
+
+  ${body || '<div class="panel"><div class="panel-body tight"><div class="empty"><b>NO ENGINES</b>Add your first engine to start building the playbook.</div></div></div>'}`;
+}
+
+function editRow(t) {
+  const days = t.days || [];
+  return `
+  <div class="ed-task ${t.active === false ? 'off' : ''}">
+    <div class="lbl-cell"><input class="fld" value="${esc(t.label)}" data-fld="t-label" data-id="${t.id}" placeholder="What's the move?"></div>
+    <div class="qty-wrap">
+      <input class="fld qty" type="number" min="0" value="${t.target_qty || 0}" data-fld="t-qty" data-id="${t.id}" aria-label="Quantity">
+      <input class="fld unit" value="${esc(t.unit || '')}" placeholder="unit" data-fld="t-unit" data-id="${t.id}" aria-label="Unit">
+    </div>
+    <div class="daybar">
+      ${DOW_S.map((L, i) => `<button class="daybit ${days.includes(i) ? 'on' : ''}" data-act="daybit" data-id="${t.id}" data-day="${i}" aria-label="${DOW_FULL[i]}">${L}</button>`).join('')}
+    </div>
+    <div class="rowacts">
+      <button class="iact" data-act="t-up" data-id="${t.id}" aria-label="Move up">${ICON.up}</button>
+      <button class="iact" data-act="t-down" data-id="${t.id}" aria-label="Move down">${ICON.down}</button>
+      <button class="iact" data-act="t-active" data-id="${t.id}" aria-label="Pause">${t.active === false ? ICON.eyeoff : ICON.eye}</button>
+      <button class="iact del" data-act="t-del" data-id="${t.id}" aria-label="Delete">${ICON.x}</button>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════ VIEW: CALENDAR ═══════════════ */
+function viewCal() {
+  const [y, m] = S.calMonth.split('-').map(Number);
+  const first = new Date(y, m - 1, 1);
+  const lead = first.getDay(), last = new Date(y, m, 0).getDate();
+  const ms = monthStats(S.calMonth);
+
+  let cells = '';
+  for (let i = 0; i < lead; i++) cells += '<div class="cell blank"></div>';
+  for (let i = 1; i <= last; i++) {
+    const ds = `${y}-${String(m).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+    const st = statusOf(ds), r = dayRev(ds), c = dayCompletion(ds);
+    cells += `
+    <button class="cell ${st} ${ds === TODAY() ? 'today' : ''} ${ds === S.date ? 'sel' : ''}" data-act="cal-day" data-date="${ds}">
+      <div class="cell-d">${i}</div>
+      ${c.total ? `<div class="cell-tasks">${c.done}/${c.total}</div>` : ''}
+      <div class="cell-amt">${st ? (r > 0 ? money(r) : '—') : ''}</div>
+      ${hasActivity(ds) && dayTarget(ds) > 0 ? `<div class="cell-tgt">of ${money(dayTarget(ds))}</div>` : ''}
+    </button>`;
+  }
+
+  return `
+  <div class="head">
+    <div>
+      <div class="head-h">CALENDAR</div>
+      <div class="head-sub">Green means you hit the number you set. Tap any day to work it.</div>
+    </div>
+    <div class="cal-nav">
+      <button class="dbtn" data-act="cal-prev" aria-label="Previous month">${ICON.left}</button>
+      <div class="cal-month">${MON[m - 1].toUpperCase()} ${y}</div>
+      <button class="dbtn" data-act="cal-next" aria-label="Next month">${ICON.right}</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="eyebrow">Collected</div><div class="stat-v" style="color:var(--hit)">${money(ms.rev)}</div><div class="stat-note">${ms.deals} deal${ms.deals === 1 ? '' : 's'}</div></div>
+    <div class="stat"><div class="eyebrow">Targeted</div><div class="stat-v">${money(ms.tgt)}</div><div class="stat-note">across ${ms.logged} active day${ms.logged === 1 ? '' : 's'}</div></div>
+    <div class="stat"><div class="eyebrow">Days hit</div><div class="stat-v" style="color:${ms.hits ? 'var(--hit)' : 'var(--dim)'}">${ms.hits}</div><div class="stat-note">of ${ms.logged} worked</div></div>
+    <div class="stat"><div class="eyebrow">Avg per active day</div><div class="stat-v">${money(ms.logged ? ms.rev / ms.logged : 0)}</div><div class="stat-note">collected</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-body tight">
+      <div class="dow">${['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(x => `<div>${x}</div>`).join('')}</div>
+      <div class="cal-grid">${cells}</div>
+      <div class="legend">
+        <span class="lg"><i style="background:var(--hit)"></i>HIT TARGET</span>
+        <span class="lg"><i style="background:var(--part)"></i>HALF OR BETTER</span>
+        <span class="lg"><i style="background:var(--ember)"></i>SOMETHING CAME IN</span>
+        <span class="lg"><i style="background:var(--miss)"></i>WORKED, NO MONEY</span>
+        <span class="lg"><i style="background:var(--slab3)"></i>UNTOUCHED</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════ VIEW: ANALYTICS ═══════════════ */
+function viewAn() {
+  const today = TODAY(), ym = today.slice(0, 7);
+  const ms = monthStats(ym);
+  const dnum = new Date().getDate();
+  const remaining = Math.max(1, ms.last - dnum + 1);
+  const need = Math.max(0, S.cfg.monthly_target - ms.rev);
+  const perDay = need / remaining;
+
+  /* last 14 days chart */
+  const bars = [];
+  for (let i = 13; i >= 0; i--) {
+    const ds = addDays(today, -i);
+    bars.push({ ds, rev: dayRev(ds), tgt: dayTarget(ds), on: hasActivity(ds) });
+  }
+  const peak = Math.max(...bars.map(b => Math.max(b.rev, b.on ? b.tgt : 0)), 100);
+  const chart = bars.map(b => {
+    const h = b.rev / peak * 100, g = (b.on ? b.tgt : 0) / peak * 100;
+    const dd = parseISO(b.ds);
+    return `<div class="col">
+      <div class="col-stack">
+        ${b.on && b.tgt > 0 ? `<div class="col-goal" style="bottom:${g}%"></div>` : ''}
+        <div class="col-bar ${b.rev >= b.tgt && b.rev > 0 ? 'hit' : ''}" style="height:${h}%" title="${b.ds}: ${money(b.rev)}"></div>
+      </div>
+      <div class="col-x">${dd.getDate()}</div>
+    </div>`;
+  }).join('');
+
+  /* all-time + behaviour correlation */
+  const allDays = [...new Set([...Object.keys(S.days), ...Object.keys(S.rev), ...Object.keys(S.logs)])]
+    .filter(hasActivity).sort();
+  const total = allDays.reduce((a, d) => a + dayRev(d), 0);
+  const worked = allDays.length;
+  const hits = allDays.filter(d => statusOf(d) === 'hit').length;
+  const allDeals = allDays.reduce((a, d) => a + (S.rev[d] || []).filter(r => r.status !== 'booked').length, 0);
+  const avgDeal = allDeals ? total / allDeals : 0;
+
+  const withTasks = allDays.filter(d => dayCompletion(d).total > 0);
+  const high = withTasks.filter(d => dayCompletion(d).pct >= 0.7);
+  const low = withTasks.filter(d => dayCompletion(d).pct < 0.7);
+  const avgHigh = high.length ? high.reduce((a, d) => a + dayRev(d), 0) / high.length : 0;
+  const avgLow = low.length ? low.reduce((a, d) => a + dayRev(d), 0) / low.length : 0;
+
+  let correlation;
+  if (high.length >= 3 && low.length >= 3) {
+    const better = avgHigh > avgLow;
+    const mult = avgLow > 0 ? (avgHigh / avgLow).toFixed(1) : null;
+    correlation = `<div class="insight ${better ? 'good' : 'warn'}">
+      <div class="eyebrow">Does the work pay?</div>
+      <p>On the <b>${high.length} days</b> you finished 70%+ of the mission you averaged <b>${money(avgHigh)}</b>.
+      On the <b>${low.length} days</b> you didn't, you averaged <b>${money(avgLow)}</b>.
+      ${better
+        ? (mult ? `That's <b>${mult}×</b>. The playbook works — the only variable left is whether you run it.` : 'The playbook works — the only variable left is whether you run it.')
+        : `The mission isn't moving revenue yet. Either the tasks are the wrong tasks, or the money is landing on a delay. Check whether your closes trail outreach by a week.`}</p>
+    </div>`;
+  } else {
+    correlation = `<div class="insight">
+      <div class="eyebrow">Does the work pay?</div>
+      <p>Needs about <b>6 logged days</b> to compare. You have <b>${withTasks.length}</b>. Keep logging honestly — half-done is worth recording as half-done.</p>
+    </div>`;
+  }
+
+  /* best weekday */
+  const byDow = Array.from({ length: 7 }, () => ({ sum: 0, n: 0 }));
+  allDays.forEach(d => { const k = parseISO(d).getDay(); byDow[k].sum += dayRev(d); byDow[k].n++; });
+  const dowAvg = byDow.map((x, i) => ({ i, avg: x.n ? x.sum / x.n : 0, n: x.n }));
+  const dowPeak = Math.max(...dowAvg.map(x => x.avg), 1);
+
+  /* task follow-through */
+  const rate = S.tasks.filter(t => t.active !== false).map(t => {
+    const days = allDays.filter(d => (t.days || []).includes(parseISO(d).getDay()));
+    if (!days.length) return null;
+    const done = days.filter(d => taskDone(d, t)).length;
+    return { label: t.label, pct: done / days.length, n: days.length };
+  }).filter(Boolean).sort((a, b) => a.pct - b.pct).slice(0, 6);
+
+  const paceOff = ms.rev < (S.cfg.monthly_target / ms.last) * dnum;
+
+  return `
+  <div class="head">
+    <div>
+      <div class="head-h">ANALYTICS</div>
+      <div class="head-sub">${MON[new Date().getMonth()]} ${new Date().getFullYear()} · ${worked} day${worked === 1 ? '' : 's'} on record</div>
+    </div>
+    <div class="datenav"><button class="today-btn" data-act="settings">${ICON.gear} NUMBERS</button></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="eyebrow">Month to date</div><div class="stat-v" style="color:var(--hit)">${money(ms.rev)}</div><div class="stat-note">of ${money(S.cfg.monthly_target)} target</div></div>
+    <div class="stat"><div class="eyebrow">Needed per day</div><div class="stat-v" style="color:${paceOff ? 'var(--ember)' : 'var(--hit)'}">${money(perDay)}</div><div class="stat-note">${remaining} day${remaining === 1 ? '' : 's'} left</div></div>
+    <div class="stat"><div class="eyebrow">Hit rate</div><div class="stat-v">${worked ? Math.round(hits / worked * 100) : 0}%</div><div class="stat-note">${hits} of ${worked} days</div></div>
+    <div class="stat"><div class="eyebrow">Avg deal</div><div class="stat-v">${money(avgDeal)}</div><div class="stat-note">${allDeals} deal${allDeals === 1 ? '' : 's'} all time</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">LAST 14 DAYS</div><div class="eyebrow">dashes = that day's target</div></div>
+      <div class="panel-body tight"><div class="chart">${chart}</div></div>
+    </div>
+
+    <div>
+      ${correlation}
+      <div class="insight ${paceOff ? 'warn' : 'good'}">
+        <div class="eyebrow">Monthly pace</div>
+        <p>${paceOff
+          ? `You're behind. Clearing ${money(S.cfg.monthly_target)} means <b>${money(perDay)} a day</b> for the remaining ${remaining} — about <b>${S.cfg.avg_deal > 0 ? Math.ceil(perDay / S.cfg.avg_deal) : 0} close${Math.ceil(perDay / Math.max(1, S.cfg.avg_deal)) === 1 ? '' : 's'}</b> a day at your average.`
+          : `You're on pace. Holding <b>${money(perDay)} a day</b> for the remaining ${remaining} clears ${money(S.cfg.monthly_target)}.`}</p>
+      </div>
+      ${streak() >= 3 ? `<div class="insight good"><div class="eyebrow">Streak</div><p><b>${streak()} days</b> hitting target in a row. This is the thing you're actually building — don't break it for a slow Tuesday.</p></div>` : ''}
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-top:14px">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">WEAKEST FOLLOW-THROUGH</div><div class="eyebrow">completion rate</div></div>
+      <div class="panel-body tight">
+        ${rate.length ? `<div class="mini-list">${rate.map(r => `
+          <div class="mini-row">
+            <span class="k">${esc(r.label)}</span>
+            <span class="mini-track"><i style="width:${Math.round(r.pct * 100)}%;background:${r.pct < .5 ? 'var(--miss)' : r.pct < .8 ? 'var(--part)' : 'var(--hit)'}"></i></span>
+            <span class="v" style="min-width:34px;text-align:right">${Math.round(r.pct * 100)}%</span>
+          </div>`).join('')}</div>`
+          : '<div class="empty"><b>NO DATA YET</b>Log a few days and the gaps will show up here.</div>'}
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">BY WEEKDAY</div><div class="eyebrow">avg collected</div></div>
+      <div class="panel-body tight">
+        <div class="mini-list">${dowAvg.map(x => `
+          <div class="mini-row">
+            <span class="k">${DOW_FULL[x.i]}</span>
+            <span class="mini-track"><i style="width:${Math.round(x.avg / dowPeak * 100)}%"></i></span>
+            <span class="v" style="min-width:52px;text-align:right">${money(x.avg)}</span>
+          </div>`).join('')}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════ RENDER ═══════════════ */
+function render() {
+  const m = document.getElementById('main');
+  const y = m.scrollTop;
+  m.innerHTML = S.view === 'war' ? viewWar()
+    : S.view === 'engine' ? viewEngine()
+    : S.view === 'cal' ? viewCal()
+    : viewAn();
+  m.scrollTop = y;
+  document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === S.view));
+}
+
+function go(view) { S.view = view; window.scrollTo({ top: 0 }); render(); }
+
+/* ═══════════════ MODALS ═══════════════ */
+function modalTarget() {
+  const d = S.date, cur = dayTarget(d);
+  openModal(`
+    <div class="modal">
+      <h3>TARGET FOR ${DOW_FULL[parseISO(d).getDay()].toUpperCase()}</h3>
+      <div class="sub">${d} · what today has to produce</div>
+      <input class="big-in" id="tv" type="number" inputmode="numeric" value="${cur}">
+      <div class="chips">
+        ${[200, 300, 400, 500, 800, 1200].map(v => `<button class="chip ${v === cur ? 'on' : ''}" data-preset="${v}">$${v}</button>`).join('')}
+      </div>
+      <div class="modal-acts">
+        <button class="btn ghost" data-close>CANCEL</button>
+        <button class="btn go" id="tsave">SET TARGET</button>
+      </div>
+    </div>`);
+  const inp = document.getElementById('tv');
+  document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => { inp.value = b.dataset.preset; });
+  document.getElementById('tsave').onclick = () => {
+    setDay(d, { target_amount: Math.max(0, +inp.value || 0) });
+    closeModal(); render(); toast('Target set to ' + money(dayTarget(d)));
+  };
+  inp.onkeydown = e => { if (e.key === 'Enter') document.getElementById('tsave').click(); };
+}
+
+function modalRevenue() {
+  const d = S.date;
+  openModal(`
+    <div class="modal">
+      <h3>LOG REVENUE</h3>
+      <div class="sub">${d}</div>
+      <input class="big-in" id="ra" type="number" inputmode="decimal" placeholder="0" style="margin-bottom:13px">
+      <div class="field"><label class="eyebrow">Client</label><input class="fld" id="rc" placeholder="Agent, brand, or name"></div>
+      <div class="field"><label class="eyebrow">Package</label>
+        <input class="fld" id="rs" placeholder="Essentials, Sophisticated, Pinnacle…">
+        <div class="chips">
+          <button class="chip" data-svc="Essentials" data-amt="420">Essentials $420</button>
+          <button class="chip" data-svc="Sophisticated" data-amt="650">Sophisticated $650</button>
+          <button class="chip" data-svc="Pinnacle" data-amt="1300">Pinnacle $1,300</button>
+        </div>
+      </div>
+      <div class="field"><label class="eyebrow">Status</label>
+        <div class="chips">
+          <button class="chip on" data-st="collected">Collected</button>
+          <button class="chip" data-st="booked">Booked, not paid</button>
+        </div>
+      </div>
+      <div class="modal-acts">
+        <button class="btn ghost" data-close>CANCEL</button>
+        <button class="btn go" id="rsave">ADD IT</button>
+      </div>
+    </div>`);
+  let status = 'collected';
+  document.querySelectorAll('[data-st]').forEach(b => b.onclick = () => {
+    status = b.dataset.st;
+    document.querySelectorAll('[data-st]').forEach(x => x.classList.toggle('on', x === b));
+  });
+  document.querySelectorAll('[data-svc]').forEach(b => b.onclick = () => {
+    document.getElementById('rs').value = b.dataset.svc;
+    if (!document.getElementById('ra').value) document.getElementById('ra').value = b.dataset.amt;
+  });
+  document.getElementById('rsave').onclick = () => {
+    const amt = +document.getElementById('ra').value;
+    if (!amt) { toast('Enter an amount first'); return; }
+    const row = {
+      id: uid(), day: d, amount: amt,
+      client: document.getElementById('rc').value.trim(),
+      service: document.getElementById('rs').value.trim(),
+      status, note: '', created_at: new Date().toISOString()
+    };
+    (S.rev[d] ||= []).push(row);
+    saveCache();
+    upsert('ros_revenue', [row], 'id');
+    if (!targetIsSet(d)) setDay(d, { target_amount: dayTarget(d) });
+    closeModal();
+    const cleared = status !== 'booked' && dayRev(d) >= dayTarget(d) && dayTarget(d) > 0;
+    render();
+    toast(cleared ? `Target cleared — ${money(dayRev(d))} today` : money(amt) + ' logged', cleared);
+  };
+  document.getElementById('ra').onkeydown = e => { if (e.key === 'Enter') document.getElementById('rsave').click(); };
+}
+
+function modalQty(t) {
+  const d = S.date, l = logOf(d, t.id), tg = tgtOf(d, t);
+  openModal(`
+    <div class="modal">
+      <h3>${esc(t.label).toUpperCase()}</h3>
+      <div class="sub">${DOW_FULL[parseISO(d).getDay()]} ${d}</div>
+      <div class="field"><label class="eyebrow">How many did you actually do?</label>
+        <input class="big-in" id="qd" type="number" inputmode="numeric" value="${l.qty_done || 0}">
+      </div>
+      <div class="field"><label class="eyebrow">Target for this day only</label>
+        <input class="big-in" id="qt" type="number" inputmode="numeric" value="${tg}" style="font-size:22px">
+        <div class="chips">
+          <span class="chip" style="pointer-events:none;border-style:dashed">Playbook default: ${t.target_qty || 0}</span>
+          <button class="chip" id="qreset">RESET TO DEFAULT</button>
+        </div>
+      </div>
+      <div class="modal-acts">
+        <button class="btn ghost" data-close>CANCEL</button>
+        <button class="btn go" id="qsave">SAVE</button>
+      </div>
+    </div>`);
+  document.getElementById('qreset').onclick = () => { document.getElementById('qt').value = t.target_qty || 0; };
+  document.getElementById('qsave').onclick = () => {
+    const qd = Math.max(0, +document.getElementById('qd').value || 0);
+    const qt = Math.max(0, +document.getElementById('qt').value || 0);
+    setLog(d, t.id, { qty_done: qd, target_override: qt === (t.target_qty || 0) ? null : qt, done: qt > 0 ? qd >= qt : true });
+    closeModal(); render();
+  };
+}
+
+function modalSettings() {
+  openModal(`
+    <div class="modal">
+      <h3>YOUR NUMBERS</h3>
+      <div class="sub">Everything else is calculated from these</div>
+      <div class="field"><label class="eyebrow">Monthly revenue target</label><input class="fld" id="s1" type="number" value="${S.cfg.monthly_target}"></div>
+      <div class="field"><label class="eyebrow">Default daily target</label><input class="fld" id="s2" type="number" value="${S.cfg.default_daily}"></div>
+      <div class="field"><label class="eyebrow">Average deal size</label><input class="fld" id="s3" type="number" value="${S.cfg.avg_deal}"></div>
+      <div class="field"><label class="eyebrow">Close rate (%)</label><input class="fld" id="s4" type="number" value="${S.cfg.close_rate}"></div>
+      <div class="modal-acts">
+        <button class="btn ghost" data-close>CANCEL</button>
+        <button class="btn go" id="ssave">SAVE</button>
+      </div>
+    </div>`);
+  document.getElementById('ssave').onclick = () => {
+    S.cfg = {
+      monthly_target: +document.getElementById('s1').value || 0,
+      default_daily: +document.getElementById('s2').value || 0,
+      avg_deal: +document.getElementById('s3').value || 0,
+      close_rate: +document.getElementById('s4').value || 0
+    };
+    saveCfg(); closeModal(); render(); toast('Numbers saved');
+  };
+}
+
+/* ═══════════════ EVENTS ═══════════════ */
+document.addEventListener('click', e => {
+  const nav = e.target.closest('[data-view]');
+  if (nav) { go(nav.dataset.view); return; }
+  if (e.target.closest('[data-close]')) { closeModal(); return; }
+
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  const a = el.dataset.act, id = el.dataset.id;
+  const d = S.date;
+  const task = id ? S.tasks.find(t => t.id === id) : null;
+
+  switch (a) {
+    case 'nav-day': S.date = addDays(d, +el.dataset.delta); render(); break;
+    case 'today': S.date = TODAY(); render(); break;
+    case 'set-target': modalTarget(); break;
+    case 'add-rev': modalRevenue(); break;
+    case 'settings': modalSettings(); break;
+
+    case 'del-rev':
+      S.rev[d] = (S.rev[d] || []).filter(r => r.id !== id);
+      saveCache(); remove('ros_revenue', 'id=eq.' + id); render();
+      break;
+
+    case 'toggle':
+      setLog(d, id, { done: !logOf(d, id).done }); render();
+      break;
+
+    case 'qty': {
+      const tg = tgtOf(d, task);
+      const next = Math.max(0, (logOf(d, id).qty_done || 0) + (+el.dataset.delta));
+      setLog(d, id, { qty_done: next, done: next >= tg });
+      render();
+      break;
+    }
+    case 'qty-max': {
+      const tg = tgtOf(d, task), cur = logOf(d, id).qty_done || 0;
+      const next = cur >= tg ? 0 : tg;
+      setLog(d, id, { qty_done: next, done: next >= tg });
+      render();
+      break;
+    }
+    case 'qty-edit': modalQty(task); break;
+
+    /* ── calendar ── */
+    case 'cal-prev': case 'cal-next': {
+      const [y, m] = S.calMonth.split('-').map(Number);
+      const nd = new Date(y, m - 1 + (a === 'cal-next' ? 1 : -1), 1);
+      S.calMonth = iso(nd);
+      loadMonthLogs(S.calMonth);
+      render();
+      break;
+    }
+    case 'cal-day': S.date = el.dataset.date; go('war'); break;
+
+    /* ── engine editor ── */
+    case 'eng-add': {
+      const key = 'eng_' + Date.now().toString(36);
+      const e2 = { id: key, name: 'New Engine', window_label: '', color: '#FF6A1F', sort: S.engines.length + 1, active: true };
+      S.engines.push(e2); saveEngine(e2); render();
+      break;
+    }
+    case 'eng-del': {
+      const eng = S.engines.find(x => x.id === id);
+      if (!confirm(`Delete "${eng?.name}" and its ${S.tasks.filter(t => t.engine_id === id).length} task(s)? Past logs stay in the calendar.`)) return;
+      S.engines = S.engines.filter(x => x.id !== id);
+      S.tasks = S.tasks.filter(t => t.engine_id !== id);
+      saveCache(); remove('ros_engine', 'id=eq.' + id); render();
+      break;
+    }
+    case 'eng-up': case 'eng-down': reorder(S.engines, id, a === 'eng-up' ? -1 : 1, saveEngine); render(); break;
+
+    case 'task-add': {
+      const eng = el.dataset.eng;
+      const t2 = { id: uid(), engine_id: eng, label: '', target_qty: 0, unit: '', days: [1, 2, 3, 4, 5], sort: S.tasks.filter(x => x.engine_id === eng).length + 1, active: true };
+      S.tasks.push(t2); saveTask(t2); render();
+      const inp = document.querySelector(`[data-fld="t-label"][data-id="${t2.id}"]`);
+      inp?.focus();
+      break;
+    }
+    case 't-del':
+      if (!confirm('Delete this task? Past logs stay in the calendar.')) return;
+      S.tasks = S.tasks.filter(t => t.id !== id);
+      saveCache(); remove('ros_task', 'id=eq.' + id); render();
+      break;
+    case 't-active': task.active = task.active === false; saveTask(task); render(); break;
+    case 't-up': case 't-down': {
+      const sibs = S.tasks.filter(t => t.engine_id === task.engine_id).sort((x, y) => (x.sort || 0) - (y.sort || 0));
+      reorder(sibs, id, a === 't-up' ? -1 : 1, saveTask); render();
+      break;
+    }
+    case 'daybit': {
+      const dayN = +el.dataset.day;
+      const set = new Set(task.days || []);
+      set.has(dayN) ? set.delete(dayN) : set.add(dayN);
+      task.days = [...set].sort();
+      saveTask(task); render();
+      break;
+    }
+  }
+});
+
+function reorder(arr, id, dir, saver) {
+  const i = arr.findIndex(x => x.id === id), j = i + dir;
+  if (i < 0 || j < 0 || j >= arr.length) return;
+  [arr[i].sort, arr[j].sort] = [arr[j].sort || j + 1, arr[i].sort || i + 1];
+  saver(arr[i]); saver(arr[j]);
+}
+
+/* field edits */
+document.addEventListener('input', e => {
+  const f = e.target.dataset.fld;
+  if (!f) return;
+  const id = e.target.dataset.id, v = e.target.value;
+  const task = () => S.tasks.find(t => t.id === id);
+  const eng = () => S.engines.find(x => x.id === id);
+  clearTimeout(e.target._t);
+  const later = fn => { e.target._t = setTimeout(fn, 550); };
+
+  switch (f) {
+    case 'date': if (v) { S.date = v; render(); } break;
+    case 'note': later(() => setDay(S.date, { note: v })); break;
+    case 't-label': task().label = v; later(() => saveTask(task())); break;
+    case 't-qty': task().target_qty = Math.max(0, +v || 0); later(() => saveTask(task())); break;
+    case 't-unit': task().unit = v; later(() => saveTask(task())); break;
+    case 'eng-name': eng().name = v; later(() => saveEngine(eng())); break;
+    case 'eng-win': eng().window_label = v; later(() => saveEngine(eng())); break;
+    case 'eng-color': eng().color = v; later(() => saveEngine(eng())); break;
+  }
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+window.addEventListener('online', flush);
+
+/* lazily pull logs for months outside the initial 180-day window */
+async function loadMonthLogs(ym) {
+  const key = ym.slice(0, 7);
+  if (S.loadedMonths.has(key)) return;
+  S.loadedMonths.add(key);
+  const [y, m] = key.split('-').map(Number);
+  const from = `${y}-${String(m).padStart(2, '0')}-01`;
+  const to = iso(new Date(y, m, 0));
+  try {
+    const rows = await api(`ros_log?select=*&day=gte.${from}&day=lte.${to}&limit=20000`);
+    rows.forEach(l => ((S.logs[l.day] ||= {})[l.task_id] = l));
+    saveCache(); render();
+  } catch (err) { /* offline — cache covers it */ }
+}
+
+boot();
+
+</script>
+</body>
+</html>
